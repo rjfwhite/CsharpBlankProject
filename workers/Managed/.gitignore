@@ -4,6 +4,9 @@ package
 .vs
 .spatialos
 *.user
+packages
+
+client_secret.json
 
 # C# worker auto-generated project files
 spatialos.csharp.build.json

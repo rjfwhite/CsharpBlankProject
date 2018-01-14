@@ -1,11 +1,16 @@
 using System;
 using System.Reflection;
 using Improbable.Worker;
+using Newtonsoft.Json;
+using Improbable;
+using Newtonsoft.Json.Linq;
 
 namespace Managed
 {
+
     internal class Startup
     {
+
         private const string WorkerType = "Managed";
 
         private const string LoggerName = "Startup.cs";
@@ -16,6 +21,42 @@ namespace Managed
 
         private static int Main(string[] args)
         {
+            var vec = new Position.Data(new PositionData(new Coordinates(1,2,3)));
+
+            var output = JsonConvert.SerializeObject(vec);
+
+            var data = JsonConvert.DeserializeObject<Position.Data>(output);
+
+            foreach(var pair in Newtonsoft.Json.Linq.JObject.Parse(output))
+            {
+                System.Console.WriteLine(pair.Key);
+                if(pair.Value is JObject)
+                {
+                    var obj = pair.Value as JObject;
+                    foreach(var pair2 in obj)
+                    {
+                        System.Console.WriteLine(pair2.Key);
+                        if (pair2.Value is JObject)
+                        {
+                            var obj2 = pair2.Value as JObject;
+                            foreach (var pair3 in obj2)
+                            {
+                                System.Console.WriteLine(pair3.Key);
+                            }
+                        }
+                    }
+                }
+            }
+
+            System.Console.WriteLine(output);
+            System.Console.WriteLine(vec.Value == data.Value);
+            
+
+
+            System.Console.ReadKey();
+
+            return 0;
+
             if (args.Length != 4) {
                 PrintUsage();
                 return ErrorExitStatus;
@@ -44,6 +85,14 @@ namespace Managed
                     Console.Error.WriteLine("[disconnect] " + op.Reason);
                     isConnected = false;
                 });
+
+                var view = new View();
+
+                foreach(var entity in view.Entities)
+                {
+                    var d = entity.Value;
+                    var type = Type.GetType("improbable.Position");
+                }
 
                 dispatcher.OnLogMessage(op =>
                 {
