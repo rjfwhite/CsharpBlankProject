@@ -16,7 +16,7 @@ using Newtonsoft.Json.Linq;
 
 namespace SheetsQuickstart
 {
-    class Program
+     class Program
     {
         // If modifying these scopes, delete your previously saved credentials
         // at ~/.credentials/sheets.googleapis.com-dotnet-quickstart.json
@@ -83,7 +83,7 @@ namespace SheetsQuickstart
 
             var vecLabels = new List<object>();
             var vecValues = new List<object>();
-            flattenJson(new PositionData(new Coordinates(1, 2, 3)), vecLabels, vecValues);
+            formatRows(new PositionData(new Coordinates(1, 2, 3)), vecLabels, vecValues);
 
 
             var valueRange = new ValueRange();
@@ -118,34 +118,6 @@ namespace SheetsQuickstart
 
         }
 
-        /// <summary>
-        /// Takes an arbitrary class in as input, and populates the 'headers' will hierarchical names of properties, and values with the appropriate value. does not work for arrays.
-        /// </summary>
-        /// <param name="inputObject"></param>
-        /// <param name="headers"></param>
-        /// <param name="values"></param>
-        private static void formatRows(object inputObject, List<object> headers, List<object> values)
-        {
-            var input = JsonConvert.SerializeObject(inputObject);
-            var result = new Dictionary<string, string>();
-            var baseObject = JObject.Parse(input);
-            var stack = new Stack<JObject>();
-            stack.Push(baseObject);
-            while(stack.Count > 0)
-            {
-                var obj = stack.Pop();
-                foreach(var property in obj)
-                {
-                    if(property.Value is JObject)
-                    {
-                        stack.Push(property.Value as JObject);
-                    } else
-                    {
-                        headers.Add(property.Value.Path);
-                        values.Add(property.Value.ToString());
-                    }
-                }
-            }
-        }
+      
     }
 }
